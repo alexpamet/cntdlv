@@ -1,0 +1,2 @@
+-- Work PC
+sudo docker run -p 8081:8080 -p 50001:50000 -v /c/Users/aca.KC/..docker/test:/var/jenkins_home jenkins
