@@ -1,0 +1,6 @@
+From slack webhook key
+zAfxuDl9hpVUV8cSCeUq5jdd
+
+AWS URL
+slackaws-env
+http://slackaws-env.elasticbeanstalk.com
