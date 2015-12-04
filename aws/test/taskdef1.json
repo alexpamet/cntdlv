@@ -1,0 +1,28 @@
+{
+  "containerDefinitions": [
+    {
+      "volumesFrom": [],
+      "memory": 300,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "mountPoints": [],
+      "name": "container12-3-1",
+      "environment": [],
+      "links": [],
+      "image": "httpd:2.4",
+      "command": [
+        "/bin/bash"
+      ],
+      "cpu": 10
+    }
+  ],
+  "volumes": [],
+  "family": "taskdefinition12-3-1"
+}

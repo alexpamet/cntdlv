@@ -1,0 +1,31 @@
+{
+    "taskDefinition": {
+        "status": "ACTIVE",
+        "family": "jenkinstaskdefinition",
+        "volumes": [],
+        "taskDefinitionArn": "arn:aws:ecs:eu-west-1:944739887208:task-definition/jenkinstaskdefinition:3",
+        "containerDefinitions": [
+            {
+                "environment": [],
+                "name": "jenkinscontainer",
+                "links": [],
+                "mountPoints": [],
+                "image": "alexpamet/jenkins:test",
+                "essential": true,
+                "portMappings": [
+                    {
+                        "protocol": "tcp",
+                        "containerPort": 8080,
+                        "hostPort": 80
+                    }
+                ],
+                "entryPoint": [],
+                "memory": 300,
+                "command": [],
+                "cpu": 10,
+                "volumesFrom": []
+            }
+        ],
+        "revision": 3
+    }
+}

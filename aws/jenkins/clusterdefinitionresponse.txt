@@ -1,0 +1,11 @@
+{
+    "cluster": {
+        "status": "ACTIVE",
+        "clusterName": "jenkinstestcluster",
+        "registeredContainerInstancesCount": 0,
+        "pendingTasksCount": 0,
+        "runningTasksCount": 0,
+        "activeServicesCount": 0,
+        "clusterArn": "arn:aws:ecs:eu-west-1:944739887208:cluster/jenkinstestcluster"
+    }
+}

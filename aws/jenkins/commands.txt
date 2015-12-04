@@ -1,0 +1,13 @@
+aws ecs register-task-definition --cli-input-json file://taskdefinitionfile.json
+
+aws ecs run-task --task-definition jenkinstaskdefinition
+aws ecs run-task --task-definition taskdefinition12-3-1
+
+
+
+aws ecs list-container-instances --region eu-west-1
+
+aws ecs create-cluster --cluster-name TestCluster
+
+
+aws ecs describe-container-instances --container-instances arn:aws:ecs:eu-west-1:944739887208:container-instance/b793f5b4-a0dc-4b5d-a3c6-42eb7f25a79e
