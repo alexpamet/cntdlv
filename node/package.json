@@ -1,0 +1,10 @@
+{
+  "name": "node-aws-tasks-listener",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Node.js app that handles starting of Docker containers for continuous delivery",
+  "author": "Aleksandar Zlatkovic <aleksandar.zlatkovic@vicert.com>",
+  "dependencies": {
+    "express": "3.2.4"
+  }
+}

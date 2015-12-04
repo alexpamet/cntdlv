@@ -6,8 +6,8 @@ exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, '  '));
 
 	var params = {
-		taskDefinition: "jenkinstaskdefinition",
-		count: 1
+		count: 1,
+		taskDefinition: "jenkinstaskdefinition"
 	};	
 	
 	ecs.runTask(params, function (err, data) {
