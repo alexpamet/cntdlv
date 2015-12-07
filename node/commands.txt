@@ -1,0 +1,3 @@
+curl -H "Content-Type: application/json" -X POST -d '{"instance":"jenkins"}' http://localhost:8080/api/start
+
+curl -H "Content-Type: application/json" -X POST -d '{"instance":"jenkins"}' http://localhost:8080/api/test
