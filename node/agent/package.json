@@ -1,8 +1,8 @@
 {
-    "name": "node-conatiner-agent",
-    "main": "server.js",
-    "dependencies": {
-        "express": "",
-        "collections": ""
-	}
+  "name": "node-conatiner-agent",
+  "main": "server.js",
+  "dependencies": {
+    "collections": "^1.2.4",
+    "express": "^4.13.3"
+  }
 }
