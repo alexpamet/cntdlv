@@ -41,6 +41,7 @@ function performRequest(endpoint, data, success) {
 	};
 
 	console.log(options);
+	console.log('Data: ' + data.instance);
 	
 	var req = http.request(options, function(res) {
 
@@ -53,28 +54,44 @@ function performRequest(endpoint, data, success) {
 		});
 
 		res.on('end', function() {
-		  console.log(responseString);
-		  var responseObject = JSON.parse(responseString);
-		  success(responseObject);
-		}
-		);
-		
-		res.on('error', function() {
-			console.log('error');
-		}
-		);
+//		  console.log('response string: ' + responseString);
+//		  var responseObject = JSON.parse(responseString);
+//		  console.log('response object: ' + responseObject);
+		  success(responseString);
+		});
 	});
 
 	req.write(dataString);
 	req.end();
 }
 
-function startInstance() {
+function startInstance(instance) {
 	performRequest('/api/start', {
-		instance: 'jenkins'
+		instance: instance
 	}, function (data) {
 		console.log(data);
 	});
 }
 
-startInstance();
+
+
+function testInstance(instance) {
+      performRequest('/api/test', {
+	  instance: instance
+      }, function (data) {
+	  var responseObject = JSON.parse(data);
+	  console.log(responseObject);
+	  console.log('Test instance ' + responseObject.instance + ' state: ' + responseObject.started);
+	  if (JSON.parse(responseObject).started == true) {
+	    clearInterval(interval);
+	  }
+      });
+}
+
+function testJenkins() {
+      testInstance('jenkins');
+}
+
+startInstance('jenkins');
+var interval = setInterval(testJenkins, 1000); 
+testJenkins();

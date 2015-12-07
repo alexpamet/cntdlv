@@ -25,23 +25,23 @@ var instances = new Map();
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router
     .post('/start', function(req, res) {
-      console.log(req.body.instance);
-      console.log(JSON);
-      
       
       var instance = req.body.instance;
 
+      console.log('Start instance: ' + instance);
+      
       instances.set(instance, Date.now());
       
       console.log(instances.entries());
 		    
-      var msg = instance + 'started';
       res.setHeader('Content-Type', 'application/json');
-      res.json(JSON.stringify({ message: msg}));   
+      res.json(JSON.stringify({ instance: instance, status: 'MOCK'}));   
     })
     .post('/test', function(req, res) {
-      
+            
       var instance = req.body.instance;
+      
+      console.log('Test instance: ' + instance);
       
       var startedAt = instances.get(instance);
       
@@ -50,7 +50,7 @@ router
       var started = Date.now() - startedAt > 5000;
       
       res.setHeader('Content-Type', 'application/json');
-      res.json(JSON.stringify({ message: started}));   
+      res.json(JSON.stringify({ instance: instance, started: started}));   
     })
     ;
 
