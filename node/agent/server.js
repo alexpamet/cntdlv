@@ -20,9 +20,71 @@ var port = process.env.PORT || 80;        // set our port
 var router = express.Router();              // get an instance of the express Router
 
 
-var host = "localhost";
-var port = '8080';
+var awsHost = "localhost";
+var awsPort = '8080';
 
+
+router
+    .get('/start', function(req, res) {
+  
+		console.log('Starting Jenkins');
+
+//      console.log('Start instance: ' + instance);
+      
+//		var interval = setInterval(testJenkins, 1000); 
+		
+		startInstance('jenkins');
+		
+//		testJenkins();
+		    
+      res.setHeader('Content-Type', 'application/json');
+      res.json(JSON.stringify({ instance: 'jenkins', status: 'MOCK'}));   
+    })
+    ;
+
+function startInstance(instance) {
+	performRequest('/api/start', {
+		instance: instance
+	}, function (data) {
+		console.log(data);
+		
+		var interval = setInterval(function () {
+			performRequest('/api/test', {
+				instance: instance
+				}, function (data) {
+					var responseObject = JSON.parse(data);
+					console.log(responseObject);
+					console.log('Test instance ' + responseObject.instance + ' state: ' + responseObject.started);
+					if (JSON.parse(responseObject).started == true) {
+					clearInterval(interval);
+				}
+			});
+		}, 1000);
+		
+	});
+}
+
+
+
+/*function testInstance(instance) {
+      performRequest('/api/test', {
+	  instance: instance
+      }, function (data) {
+		  var responseObject = JSON.parse(data);
+		  console.log(responseObject);
+		  console.log('Test instance ' + responseObject.instance + ' state: ' + responseObject.started);
+		  if (JSON.parse(responseObject).started == true) {
+			clearInterval(interval);
+		  }
+      });
+}
+
+function testJenkins() {
+      testInstance('jenkins');
+}
+*/
+
+	
 function performRequest(endpoint, data, success) {
   var dataString = JSON.stringify(data);
   var headers = {};
@@ -33,8 +95,8 @@ function performRequest(endpoint, data, success) {
 	};
 	
 	var options = {
-		host: host,
-		port: port,
+		host: awsHost,
+		port: awsPort,
 		path: endpoint,
 		method: 'POST',
 		headers: headers
@@ -54,10 +116,13 @@ function performRequest(endpoint, data, success) {
 		});
 
 		res.on('end', function() {
-//		  console.log('response string: ' + responseString);
-//		  var responseObject = JSON.parse(responseString);
-//		  console.log('response object: ' + responseObject);
-		  success(responseString);
+		  console.log('response string: ' + responseString);
+		  var responseObject = JSON.parse(responseString);
+/*		  console.log('response object: ' + responseObject);
+		  var r2 = JSON.parse(responseString);
+		  console.log('r2: ' + r2);*/
+		  
+		  success(responseObject);
 		});
 	});
 
@@ -65,33 +130,11 @@ function performRequest(endpoint, data, success) {
 	req.end();
 }
 
-function startInstance(instance) {
-	performRequest('/api/start', {
-		instance: instance
-	}, function (data) {
-		console.log(data);
-	});
-}
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
 
-
-
-function testInstance(instance) {
-      performRequest('/api/test', {
-	  instance: instance
-      }, function (data) {
-	  var responseObject = JSON.parse(data);
-	  console.log(responseObject);
-	  console.log('Test instance ' + responseObject.instance + ' state: ' + responseObject.started);
-	  if (JSON.parse(responseObject).started == true) {
-	    clearInterval(interval);
-	  }
-      });
-}
-
-function testJenkins() {
-      testInstance('jenkins');
-}
-
-startInstance('jenkins');
-var interval = setInterval(testJenkins, 1000); 
-testJenkins();
+// START THE SERVER
+// =============================================================================
+app.listen(port);
+console.log('Magic happens on port ' + port);
