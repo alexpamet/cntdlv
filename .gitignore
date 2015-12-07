@@ -1,1 +1,4 @@
 /slackaws/bin
+/node/mocklambda/node_modules
+/node/agent/node_modules
+/node/node_modules
