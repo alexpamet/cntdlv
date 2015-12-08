@@ -35,7 +35,6 @@ router
       console.log(instances.entries());
 		    
       res.setHeader('Content-Type', 'application/json');
-//      res.json(JSON.stringify({ instance: instance, status: 'MOCK'}));   
       res.json({ instance: instance, status: 'MOCK'});   
     })
     .post('/test', function(req, res) {
@@ -51,7 +50,6 @@ router
       var started = Date.now() - startedAt > 5000;
       
       res.setHeader('Content-Type', 'application/json');
-//      res.json(JSON.stringify({ instance: instance, started: started}));   
       res.json({ instance: instance, started: started});   
     })
     ;

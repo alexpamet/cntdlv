@@ -6,12 +6,7 @@
 // call the packages we need
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
-var http = require('http');
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-//app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(bodyParser.json());
+var request = require('request');
 
 var port = process.env.PORT || 80;        // set our port
 
@@ -20,8 +15,8 @@ var port = process.env.PORT || 80;        // set our port
 var router = express.Router();              // get an instance of the express Router
 
 
-var awsHost = "localhost";
-var awsPort = '8080';
+var awsProtocol = "http://"
+var awsHost = "localhost:8080/api/";
 
 
 router
@@ -29,33 +24,27 @@ router
   
 		console.log('Starting Jenkins');
 
-//      console.log('Start instance: ' + instance);
-      
-//		var interval = setInterval(testJenkins, 1000); 
-		
 		startInstance('jenkins');
 		
-//		testJenkins();
-		    
-      res.setHeader('Content-Type', 'application/json');
-      res.json(JSON.stringify({ instance: 'jenkins', status: 'MOCK'}));   
+		res.setHeader('Content-Type', 'application/json');
+		res.json(JSON.stringify({ instance: 'jenkins', status: 'MOCK'}));   
     })
     ;
 
 function startInstance(instance) {
-	performRequest('/api/start', {
+	performRequest('/start', {
 		instance: instance
-	}, function (data) {
-		console.log(data);
+	}, function (error, response, body) {
+		console.log('Start instance response body', body);
 		
 		var interval = setInterval(function () {
-			performRequest('/api/test', {
+			performRequest('/test', {
 				instance: instance
-				}, function (data) {
-					var responseObject = JSON.parse(data);
-					console.log(responseObject);
-					console.log('Test instance ' + responseObject.instance + ' state: ' + responseObject.started);
-					if (JSON.parse(responseObject).started == true) {
+				}, function (error, response, body) {
+//					var responseObject = JSON.parse(data);
+					console.log(body);
+					console.log('Test instance ' + body.instance + ' state: ' + body.started);
+					if (body.started == true) {
 					clearInterval(interval);
 				}
 			});
@@ -64,70 +53,25 @@ function startInstance(instance) {
 	});
 }
 
-
-
-/*function testInstance(instance) {
-      performRequest('/api/test', {
-	  instance: instance
-      }, function (data) {
-		  var responseObject = JSON.parse(data);
-		  console.log(responseObject);
-		  console.log('Test instance ' + responseObject.instance + ' state: ' + responseObject.started);
-		  if (JSON.parse(responseObject).started == true) {
-			clearInterval(interval);
-		  }
-      });
-}
-
-function testJenkins() {
-      testInstance('jenkins');
-}
-*/
-
-	
 function performRequest(endpoint, data, success) {
-  var dataString = JSON.stringify(data);
-  var headers = {};
+	var dataString = JSON.stringify(data);
+	var headers = {};
   
-	headers = {
-		'Content-Type': 'application/json',
-		'Content-Length': dataString.length
-	};
+	console.log('Instance: ', data.instance);
 	
-	var options = {
-		host: awsHost,
-		port: awsPort,
-		path: endpoint,
-		method: 'POST',
-		headers: headers
-	};
-
-	console.log(options);
-	console.log('Data: ' + data.instance);
-	
-	var req = http.request(options, function(res) {
-
-		res.setEncoding('utf-8');
-
-		var responseString = '';
-
-		res.on('data', function(data) {
-		  responseString += data;
-		});
-
-		res.on('end', function() {
-		  console.log('response string: ' + responseString);
-		  var responseObject = JSON.parse(responseString);
-/*		  console.log('response object: ' + responseObject);
-		  var r2 = JSON.parse(responseString);
-		  console.log('r2: ' + r2);*/
-		  
-		  success(responseObject);
-		});
-	});
-
-	req.write(dataString);
-	req.end();
+	request (
+		{
+			url: awsProtocol + awsHost + endpoint,
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Content-Length': dataString.length
+			},
+			json: {
+				instance: data.instance
+			}
+		}, success
+	);
 }
 
 // REGISTER OUR ROUTES -------------------------------
