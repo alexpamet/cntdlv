@@ -1,0 +1,9 @@
+{
+  "name": "node-aws-slack-bridge",
+  "main": "server.js",
+  "dependencies": {
+    "collections": "^1.2.4",
+    "express": "^4.13.3",
+    "request": "^2.67.0"
+  }
+}
