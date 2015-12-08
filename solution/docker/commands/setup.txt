@@ -1,0 +1,15 @@
+# Build docker image for node aws slack bridge
+sudo docker build -t alexpamet/nasb .
+
+
+
+# Call create task definition for node aws slack bridge - this should be inside startCntDlvStack Lambda function
+aws ecs register-task-definition --cli-input-json file://node_aws_slack_bridge_taks_definition.json
+
+# Standup EC2 instance with docker agent - for now this is manual process - need to find a way to do this automatically
+    # Create instance from EC2 for docker AMI
+    # Start the instance
+    
+############## Lambda function ########################################
+# For lambda function the Role needs to be crated {example: runTaskFromLambdaRole}
+# Set maximal function timeout

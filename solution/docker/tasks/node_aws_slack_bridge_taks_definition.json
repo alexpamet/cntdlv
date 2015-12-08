@@ -12,13 +12,13 @@
 			"essential": true,
 			"entryPoint": [],
 			"mountPoints": [],
-			"name": "jenkinscontainer",
+			"name": "node-aws-slack-bridge",
 			"environment": [],
 			"links": [],
-			"image": "alexpamet/jenkins:test",
+			"image": "alexpamet/nasb",
 			"command": [],
 			"cpu": 10
 		}
 	],
-	"family": "jenkinstaskdefinition"
+	"family": "node-aws-slack-bridge-task-definition"
 }
