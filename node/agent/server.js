@@ -8,17 +8,18 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var request = require('request');
 
+// Application port
 var port = process.env.PORT || 8081;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
-
+// URL for AWS API
 var awsProtocol = "http://"
 var awsHost = "localhost:8080/api/";
 
-
+// setup router
 router
     .get('/start', function(req, res) {
   
@@ -31,6 +32,7 @@ router
     })
     ;
 
+// Function that calls start instance api for an instance
 function startInstance(instance) {
 	performRequest('/start', {
 		instance: instance
@@ -53,6 +55,7 @@ function startInstance(instance) {
 	});
 }
 
+// Function that performs JSON request
 function performRequest(endpoint, data, success) {
 	var dataString = JSON.stringify(data);
 	var headers = {};
