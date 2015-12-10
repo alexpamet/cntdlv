@@ -4,15 +4,15 @@
 	1. Outgoing web-hook is needed in Slack to send request to AWS when a message is entered with key word (cntdlv)
 	2. Amazon API Gateway is setup to forward message to Lambda
 	3. Lambda function is created that only executes if in the post the API key is the key that is setup in slack Outgoing WebHook
-	4. Lambda function has approprite privlegues to start server
+	4. Lambda function has appropriate privileges to start server
 	5. Need to find out how to start EC2 instance with Docker Agent ???? Assume that this can be done with ec2-run-instances API call. Lambda function can only run for 60 seconds so we are not sure if this is acceptable approach.
 4. Lambda calls start AWS ECS (EC2 Container service) task start. This task defines Docker container with Node JS application that will handle startup of all other container.
 	1. Create Docker images with node installed and node application.
-	2. Create Task defintion in AWS (This can be created from lamnda function in step above or predefined manaly)
+	2. Create Task definition in AWS (This can be created from lambda function in step above or predefined manly)
 5. Node application calls another Lambda function to start jenkins server task.
 	1. Docker container image is needed to be predefined with jenkins.
 	2. AWS ECS taks describing the Jenkins docker container needs to be created. (Also can be created in AWS from node application, or predefined in AWS manually)
-6. Node applciation sends message to slack about process curent status by hitting Slack incoming WebHooks.
-7. Node application periodically chceks for the status of the Jenkins task. Once the task is in the desired state it sends message back to slack by hitting Slack incoming WebHooks.
+6. Node application sends message to slack about process curent status by hitting Slack incoming WebHooks.
+7. Node application periodically checks for the status of the Jenkins task. Once the task is in the desired state it sends message back to slack by hitting Slack incoming WebHooks.
 8. Repeat steps 5, 6, 7 for next server (Nexus, ...)
 	
