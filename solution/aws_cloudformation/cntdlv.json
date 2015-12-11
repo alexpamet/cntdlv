@@ -38,7 +38,8 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
         "KeyName" : { "Ref" : "KeyName" },
-        "ImageId" : "ami-af0a6dd8"
+        "ImageId" : "ami-af0a6dd8",
+		"IamInstanceProfile": "ecsInstanceRole"
       }
     },
 
