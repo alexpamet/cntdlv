@@ -32,14 +32,80 @@
   },
 
   "Resources" : {
+    "CfnUser" : {
+      "Type" : "AWS::IAM::User",
+      "Properties" : {
+        "Path": "/",
+        "Policies": [ {
+          "PolicyName": "root",
+          "PolicyDocument": { "Statement": [ {
+            "Effect":"Allow",
+            "Action":"cloudformation:DescribeStackResource",
+            "Resource":"*"
+          } ] }
+        } ]
+      }
+    },
+
+    "HostKeys" : {
+      "Type" : "AWS::IAM::AccessKey",
+      "Properties" : {
+        "UserName" : { "Ref" : "CfnUser" }
+      }
+    },
+
     "ECSInstance" : {
       "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "AWS::CloudFormation::Init" : {
+          "config" : {
+            "packages" : {
+              "rpm" : {
+              "nodejs" : "http://nodejs.tchol.org/repocfg/amzn1/nodejs-stable-release.noarch.rpm"
+              },
+              "yum": {
+              "gcc-c++": [],
+              "make": [],
+              "git" : [],
+              "nodejs-compat-symlinks": [],
+              "npm": []
+              }
+            }
+          }
+        }
+      },
+	  
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
         "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
         "KeyName" : { "Ref" : "KeyName" },
         "ImageId" : "ami-af0a6dd8",
-		"IamInstanceProfile": "ecsInstanceRole"
+		"IamInstanceProfile": "ecsInstanceRole",
+        "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+          "yum update -y aws-cfn-bootstrap\n",
+
+          "## Error reporting helper function\n",
+          "function error_exit\n",
+          "{\n",
+          "   /opt/aws/bin/cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WaitHandleECSInstance" }, "'\n",
+          "   exit 1\n",
+          "}\n",
+
+          "## Initialize CloudFormation bits\n",
+          "/opt/aws/bin/cfn-init -v -s ", { "Ref" : "AWS::StackName" }, " -r ECSInstance",
+          "   --access-key ",  { "Ref" : "HostKeys" },
+          "   --secret-key ", {"Fn::GetAtt": ["HostKeys", "SecretAccessKey"]},
+          "   --region eu-west-1 > /tmp/cfn-init.log 2>&1 || error_exit $(</tmp/cfn-init.log)\n",
+
+          "## Raise file descriptor limits\n",
+          "echo '* hard nofile 100000' | tee -a /etc/security/limits.conf\n",
+          "echo '* soft nofile 100000' | tee -a /etc/security/limits.conf\n",
+          "ulimit -n 100000\n",                    
+
+          "## CloudFormation signal that setup is complete\n",
+          "/opt/aws/bin/cfn-signal -e 0 -r \"ECSInstance setup complete\" '", { "Ref" : "WaitHandleECSInstance" }, "'\n"
+        ] ] } }
       }
     },
 
@@ -53,6 +119,20 @@
           "ToPort" : "22",
           "CidrIp" : { "Ref" : "SSHLocation"}
         } ]
+      }
+    },
+
+    "WaitHandleECSInstance" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle",
+      "Properties" : {}
+    },
+
+    "WaitConditionECSInstance" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "ECSInstance",
+      "Properties" : {
+        "Handle" : { "Ref" : "WaitHandleECSInstance" },
+        "Timeout" : "1500"
       }
     }
   },
