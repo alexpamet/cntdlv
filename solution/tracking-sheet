@@ -1,19 +1,19 @@
 
-
+Slack outgoing web hook
+AWS API Gateway to expose Lambda Function
 Lambda function to start the cloud formation template
   - secured by Slack API key
-  - able to avoid multiple calls when process is already starting ???
-AWS API Gateway to expose Lambda function
-Slack outgoing webhook
+  - reads API key set in Amazon
+  - able to avoid multiple calls when process is already starting ??? 
 Slack incoming webhook
 Cloud formation template
   - Server with Docker
   - Server with NGNX - HTTPS proxy with - certificate setting
-Docker image with node app
+Docker image with nodejs app
 Docker image with Jenkins
-AWS task for docker image with node application
 AWS task for docker image with Jenkins
 Node JS application
+ - handle messages from slack
  - start AWS docker task
  - test AWS docker task status
  - post response to Slack
@@ -25,3 +25,4 @@ Client setup and documentation
   - Slack outgoing webhook
   - User account with API keys
   - HTPPS (SSL) Certificate
+  - Save Slack API key to be used by Lambda fucntion
