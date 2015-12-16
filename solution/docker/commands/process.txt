@@ -12,7 +12,7 @@
 5. Node application calls another Lambda function to start jenkins server task.
 	1. Docker container image is needed to be predefined with jenkins.
 	2. AWS ECS taks describing the Jenkins docker container needs to be created. (Also can be created in AWS from node application, or predefined in AWS manually)
-6. Node application sends message to slack about process curent status by hitting Slack incoming WebHooks.
+6. Node application sends message to slack about process current status by hitting Slack incoming WebHooks.
 7. Node application periodically checks for the status of the Jenkins task. Once the task is in the desired state it sends message back to slack by hitting Slack incoming WebHooks.
 8. Repeat steps 5, 6, 7 for next server (Nexus, ...)
 	

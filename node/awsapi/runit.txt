@@ -1,0 +1,1 @@
+docker run -p 8081:8081 -e AWS_ACCESS_KEY_ID="public key" -e AWS_SECRET_ACCESS_KEY="secret key" alexpamet/awsapi

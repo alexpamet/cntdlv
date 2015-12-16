@@ -5,6 +5,7 @@
   "description": "Node.js app that handles starting of Docker containers for continuous delivery",
   "author": "Aleksandar Zlatkovic <aleksandar.zlatkovic@vicert.com>",
   "dependencies": {
+    "aws-sdk": "^2.2.23",
     "express": "3.2.4"
   }
 }
