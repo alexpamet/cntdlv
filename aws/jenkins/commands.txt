@@ -11,3 +11,9 @@ aws ecs create-cluster --cluster-name TestCluster
 
 
 aws ecs describe-container-instances --container-instances arn:aws:ecs:eu-west-1:944739887208:container-instance/b793f5b4-a0dc-4b5d-a3c6-42eb7f25a79e
+
+
+
+GetHelloWorld
+
+aws lambda invoke --invocation-type RequestResponse --function-name GetHelloWorld --region us-west-2 --log-type Tail --payload '{"key1":"value1", "key2":"value2", "key3":"value3"}' --profile adminuser outputfile.txt

@@ -1,0 +1,2 @@
+AMI ID: ami-af0a6dd8 		AMI Name: amzn-ami-2015.03.a-amazon-ecs-optimized
+AMI ID: ami-519a0a26		AMI Name: amzn-ami-2014.09.1-amazon-ecs-optimized-preview3
