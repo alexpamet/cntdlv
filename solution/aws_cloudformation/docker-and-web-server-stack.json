@@ -61,7 +61,73 @@
               "nginx": []
               }
             }
-          }
+          },
+          "Install" : {
+            "files" : {
+				"/etc/nginx/nginx.conf" : {
+					"content" : { "Fn::Join" : [ "", [
+					
+
+						"user  nginx;\n",
+						"worker_processes  auto;\n",
+						"\n",
+						"error_log  /var/log/nginx/error.log;\n",
+						"pid        /var/run/nginx.pid;\n",
+						"events {\n",
+						"    worker_connections 1024;\n",
+						"}\n",
+						"http {\n",
+						"    include         /etc/nginx/mime.types;\n",
+						"    default_type    application/octet-stream;\n",
+						"    log_format  main  '$remote_addr - $remote_user [$time_local] \"$request\" ' '$status $body_bytes_sent \"$http_referer\" ' '\"$http_user_agent\" \"$http_x_forwarded_for\"';\n",
+						"    access_log  /var/log/nginx/access.log  main;\n",
+						"\n",
+						"    sendfile            on;\n",
+						"    tcp_nopush          on;\n",
+						"    tcp_nodelay         on;\n",
+						"    keepalive_timeout   65;\n",
+						"    types_hash_max_size 2048;\n",
+						"    include /etc/nginx/conf.d/*.conf;\n",
+						"    index   index.html index.htm;\n",
+						"    server {\n",
+						"        listen       80;\n",
+						"        server_name  localhost;\n",
+						"        root         /usr/share/nginx/html;\n",
+						"		location /server1/ {\n",
+						"			proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8081;\n",
+						"			proxy_set_header Host $host;\n",
+						"			proxy_set_header X-Real-IP $remote_addr;\n",
+						"			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
+						"		}\n",
+						"	   \n",
+						"		location /server2/ {\n",
+						"			proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8082;\n",
+						"			proxy_set_header Host $host;\n",
+						"			proxy_set_header X-Real-IP $remote_addr;\n",
+						"			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
+						"		}\n",
+						"		\n",
+						"        location / {\n",
+						"        }\n",
+						"        error_page 404 /404.html;\n",
+						"        location = /40x.html {\n",
+						"        }\n",
+						"        error_page 500 502 503 504 /50x.html;\n",
+						"        location = /50x.html {\n",
+						"        }\n",
+						"    }\n",
+						"}\n",
+
+
+					
+					
+                ]]},
+                "mode"  : "000600",
+                "owner" : "nginx",
+                "group" : "nginx"
+				}
+			}
+		  }
         }
       },
 	  
