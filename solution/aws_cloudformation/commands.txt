@@ -1,4 +1,4 @@
 aws cloudformation create-stack --stack-name myteststack --template-body file://cntdlv.json
-{
-    "StackId": "arn:aws:cloudformation:eu-west-1:944739887208:stack/myteststack/cac018c0-9f38-11e5-a922-50faeb56c436"
-}
+
+
+aws cloudformation create-stack --stack-name wsstack --template-body file://web-server-stack.json --capabilities CAPABILITY_IAM --on-failure DO_NOTHING
