@@ -55,6 +55,12 @@
 	  
       "Metadata" : {
         "AWS::CloudFormation::Init" : {
+			
+          "configSets" : {
+            "InstallAndRun" : [ "Install" ]
+          },
+			
+			
           "config" : {
             "packages" : {
               "yum": {
@@ -64,7 +70,7 @@
           },
           "Install" : {
             "files" : {
-				"/etc/nginx/nginx.conf" : {
+				"/etc/nginx/nginx1.conf" : {
 					"content" : { "Fn::Join" : [ "", [
 					
 
@@ -93,38 +99,32 @@
 						"        listen       80;\n",
 						"        server_name  localhost;\n",
 						"        root         /usr/share/nginx/html;\n",
-						"		location /server1/ {\n",
-						"			proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8081;\n",
-						"			proxy_set_header Host $host;\n",
-						"			proxy_set_header X-Real-IP $remote_addr;\n",
-						"			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
-						"		}\n",
-						"	   \n",
-						"		location /server2/ {\n",
-						"			proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8082;\n",
-						"			proxy_set_header Host $host;\n",
-						"			proxy_set_header X-Real-IP $remote_addr;\n",
-						"			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
-						"		}\n",
-						"		\n",
-						"        location / {\n",
-						"        }\n",
-						"        error_page 404 /404.html;\n",
-						"        location = /40x.html {\n",
-						"        }\n",
-						"        error_page 500 502 503 504 /50x.html;\n",
-						"        location = /50x.html {\n",
-						"        }\n",
-						"    }\n",
-						"}\n",
-
-
-					
-					
-                ]]},
-                "mode"  : "000600",
-                "owner" : "nginx",
-                "group" : "nginx"
+"location /server1/ {\n",
+"proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8081;\n",
+"proxy_set_header Host $host;\n",
+"proxy_set_header X-Real-IP $remote_addr;\n",
+"proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
+"}\n",
+"\n",
+"location /server2/ {\n",
+"proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8082;\n",
+"proxy_set_header Host $host;\n",
+"proxy_set_header X-Real-IP $remote_addr;\n",
+"proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
+"}\n",
+"\n",
+"location / {\n",
+"}\n",
+"error_page 404 /404.html;\n",
+"location = /40x.html {\n",
+"}\n",
+"error_page 500 502 503 504 /50x.html;\n",
+"location = /50x.html {\n",
+"}\n"
+]]},
+"mode"  : "000600",
+"owner" : "nginx",
+"group" : "nginx"
 				}
 			}
 		  }
@@ -139,6 +139,15 @@
 		"IamInstanceProfile": "ecsInstanceRole",
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
+             "yum update -y aws-cfn-bootstrap\n",
+
+             "# Install the files and packages from the metadata\n",
+             "/opt/aws/bin/cfn-init -v ",
+             "         --stack ", { "Ref" : "AWS::StackName" },
+             "         --resource WebServer ",
+             "         --configsets InstallAndRun ",
+             "         --region ", { "Ref" : "AWS::Region" }, "\n",
+
 		  
           "yum install nginx -y\n",
           "chkconfig nginx on\n",

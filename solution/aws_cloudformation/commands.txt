@@ -2,3 +2,6 @@ aws cloudformation create-stack --stack-name myteststack --template-body file://
 
 
 aws cloudformation create-stack --stack-name wsstack --template-body file://web-server-stack.json --capabilities CAPABILITY_IAM --on-failure DO_NOTHING
+
+
+aws cloudformation create-stack --stack-name wsstack --template-body file://docker-and-web-server-stack.json --on-failure DO_NOTHING
