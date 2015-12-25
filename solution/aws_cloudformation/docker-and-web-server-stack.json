@@ -44,7 +44,8 @@
         "IamInstanceProfile": "ecsInstanceRole",
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
-          "docker pull alexpamet/jenkins:test\n"
+          "docker pull alexpamet/nodejs1\n",
+		  "docker run -d -p 8081:8081 alexpamet/nodejs1\n"
 
         ] ] } }
       }
@@ -60,15 +61,13 @@
             "InstallAndRun" : [ "Install" ]
           },
 			
-			
-          "config" : {
-            "packages" : {
-              "yum": {
-              "nginx": []
-              }
-            }
-          },
           "Install" : {
+            "packages" : {
+              "yum" : {
+                "nginx"        : []
+              }
+            },
+			  
             "files" : {
 				"/etc/nginx/nginx.conf" : {
 					"content" : { "Fn::Join" : [ "", [
@@ -128,7 +127,14 @@
 "owner" : "root",
 "group" : "root"
 				}
-			}
+			},
+			
+            "services" : {
+              "sysvinit" : {  
+                "nginx"    : { "enabled" : "true", "ensureRunning" : "true" }
+              }
+            }
+			
 		  }
         }
       },
@@ -151,9 +157,6 @@
              "         --region ", { "Ref" : "AWS::Region" }, "\n",
 
 		  
-          "yum install nginx -y\n",
-          "chkconfig nginx on\n",
-		      "service nginx start\n",
 
           "echo ", { "Fn::GetAtt" : [ "ECSInstance", "PrivateIp" ] }
 
