@@ -56,10 +56,20 @@
 		"IamInstanceProfile": "ecsInstanceRole",
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
-		  
-          "yum install nginx -y\n",
-          "chkconfig nginx on\n",
-		  "service nginx start\n"
+		  "cd ~\n",
+		  "mkdir keys\n",
+		  "cd ~/keys\n",
+		  "\n",
+		  "openssl genrsa -out ng-proxy-private-key.pem 2048\n",
+		  "openssl req -sha256 -new -key ng-proxy-private-key.pem -out ng-proxy-csr.pem -subj \"/C=RS/ST=Belgrade/L=Belgrade/O=Pamet/OU=Pamet/CN=pamet.rs\"\n",
+		  "openssl x509 -req -days 365 -in ng-proxy-csr.pem -signkey ng-proxy-private-key.pem -out ng-proxy-public-certificate.pem\n",
+		  "\n",
+		  "mv ng-proxy-private-key.pem -t /etc/ssl/\n",
+		  "mv ng-proxy-public-certificate.pem -t /etc/ssl/\n",
+		  "\n",
+		  "cd ~\n",
+		  "rm -r ~/keys\n",
+		  "\n"
 
         ] ] } }
       }
