@@ -70,7 +70,7 @@
           },
           "Install" : {
             "files" : {
-				"/etc/nginx/nginx1.conf" : {
+				"/etc/nginx/nginx.conf" : {
 					"content" : { "Fn::Join" : [ "", [
 					
 
@@ -100,14 +100,14 @@
 						"        server_name  localhost;\n",
 						"        root         /usr/share/nginx/html;\n",
 "location /server1/ {\n",
-"proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8081;\n",
+"proxy_pass http://",{ "Fn::GetAtt" : [ "ECSInstance", "PrivateIp" ] },":8081;\n",
 "proxy_set_header Host $host;\n",
 "proxy_set_header X-Real-IP $remote_addr;\n",
 "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
 "}\n",
 "\n",
 "location /server2/ {\n",
-"proxy_pass http://ec2-52-16-190-75.eu-west-1.compute.amazonaws.com:8082;\n",
+"proxy_pass http://",{ "Fn::GetAtt" : [ "ECSInstance", "PrivateIp" ] },":8082;\n",
 "proxy_set_header Host $host;\n",
 "proxy_set_header X-Real-IP $remote_addr;\n",
 "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n",
@@ -120,11 +120,13 @@
 "}\n",
 "error_page 500 502 503 504 /50x.html;\n",
 "location = /50x.html {\n",
+"}\n",
+"}\n",
 "}\n"
 ]]},
 "mode"  : "000600",
-"owner" : "nginx",
-"group" : "nginx"
+"owner" : "root",
+"group" : "root"
 				}
 			}
 		  }
